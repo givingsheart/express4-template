@@ -13,8 +13,8 @@ var fs = require('fs');
 var morgan = require('morgan'); // logger
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
-var session = require('express-session');
 var cookieParser = require('cookie-parser');
+var session = require('express-session');
 var favicon = require('static-favicon');
 var errorHandler = require('errorhandler');
 
