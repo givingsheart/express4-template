@@ -1,54 +1,57 @@
 module.exports = function(grunt) {
-	grunt.initConfig({
-		// Task configuration.
-		concat : {
-			dist : {
-				src : ['test/config.js', 'test/server.js'],
-				dest : 'test/result.js'
-			}
-		},
-		uglify : {
-			dist : {
-				src : '<%= concat.dist.dest %>',
-				dest : 'test/result.min.js'
-			}
-		},
-		watch : {
-			backend: {
-				files : ['server.js', 'app/**/*.js'],
-				tasks : ['express:dev'],
-				options : {
-					spawn : false
-				}
-			},
-			
-			frontend : {
-				options :{
-					livereload : true
-				},
-				files: [
-					'app/views/**/*.html',
-					'public/javascripts/**/*.js',
-					'public/stylesheets/**/*.css',
-				]
-			}
-		},
-		express : {
-			options: {
-				node_env: 'development'
-			},
-			dev : {
-				options : {
-					script : 'server.js'
-				}
-			}
-		}
-	});
+  grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'),
 
-	grunt.loadNpmTasks('grunt-contrib-concat');
-	grunt.loadNpmTasks('grunt-contrib-uglify');
-	grunt.loadNpmTasks('grunt-contrib-watch');
-	grunt.loadNpmTasks('grunt-express-server');
+    watch: {
+      options: {
+	spawn: false,
+	livereload: true
+      },
 
-	grunt.registerTask('server', ['express:dev', 'watch']);
+      js: {
+	files: ['public/js/**/*.js']
+      },
+
+      css: {
+	files: ['public/css/**/*.css']
+      },
+
+      html: {
+	files: ['app/views/**/*.html']
+      },
+
+      nodejs: {
+	files: ['app/**/*.js', 'server.js'],
+	tasks: ['express:dev'],
+	options: {
+	  livereload: false
+	}
+      },
+
+      gruntFile: {
+	files: ['Gruntfile.js'],
+	options: {
+	  livereload: false,
+	  reload: true
+	}
+      }
+    },
+
+    express: {
+      options: {
+	node_env: 'development'
+      },
+      dev: {
+	options: {
+	  script: 'server.js'
+	}
+      }
+    }
+    
+  });
+
+  // Automatically load grunt-contrib modules defined in package.json
+  require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
+
+  grunt.registerTask('server', ['express:dev', 'watch']);
 };
